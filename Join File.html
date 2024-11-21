@@ -17,26 +17,12 @@
 
     <script>
         const GITHUB_API_URL = 'https://api.github.com/repos/monkeyluigi/senior_assassin/contents/';
-        async function loadToken() {
-            try {
-                // Fetch the config.json file
-                const response = await fetch('config.json');
-                const config = await response.json();
 
                 // Extract the token (or use a default if not found)
-                const GITHUB_TOKEN_NO_PREFIX = config.GITHUB_TOKEN || '';
+                const GITHUB_TOKEN_NO_PREFIX = JoGJywcsomizkIlUiEnHCirbjcXPUd0DpKlg;
 
                 // Add your desired prefix if needed
                 const GITHUB_TOKEN = 'hgp_' + GITHUB_TOKEN_NO_PREFIX;
-
-                // Check the result
-                console.log('GitHub Token:', GITHUB_TOKEN);
-
-                // Now you can use the token as needed (e.g., make API requests)
-            } catch (error) {
-                console.error('Error loading config.json:', error);
-            }
-        }
 
         async function joinGame() {
             const gameCode = document.getElementById('game-code').value.trim();
