@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senior Assassin - Host</title>
+</head>
+<body>
+    <h1>Senior Assassin - Host</h1>
+    <div>
+        <button onclick="startNewGame()">Start New Game</button>
+        <p id="game-code-display">Game Code: </p>
+    </div>
+
+    <script>
+        const GITHUB_API_URL = 'https://api.github.com/repos/YOUR_USERNAME/YOUR_REPOSITORY/contents/';
+        const GITHUB_TOKEN = 'YOUR_PERSONAL_ACCESS_TOKEN';
+
+        async function startNewGame() {
+            const gameCode = Math.floor(Math.random() * 1000000).toString();
+            const filePath = `${gameCode}.json`; // Each game gets its own file
+            const initialData = {
+                gameCode: gameCode,
+                players: []
+            };
+
+            // Upload initial game data to GitHub
+            try {
+                const response = await fetch(GITHUB_API_URL + filePath, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Create new game',
+                        content: btoa(JSON.stringify(initialData))
+                    })
+                });
+
+                if (response.ok) {
+                    document.getElementById('game-code-display').textContent = `Game Code: ${gameCode}`;
+                    alert("Game started! Share this code with joiners.");
+                } else {
+                    alert("Failed to create game. Check your GitHub settings.");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("An error occurred while creating the game.");
+            }
+        }
+    </script>
+</body>
+</html>
