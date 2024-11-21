@@ -4,6 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Senior Assassin - Join</title>
+
+    async function loadToken() {
+            try {
+                // Fetch the config.json file
+                const response = await fetch('config.json');
+                const config = await response.json();
+
+                // Extract the token (or use a default if not found)
+                const GITHUB_TOKEN_NO_PREFIX = config.GITHUB_TOKEN || '';
+
+                // Add your desired prefix if needed
+                const GITHUB_TOKEN = 'hgp_' + GITHUB_TOKEN_NO_PREFIX;
+
+                // Check the result
+                console.log('GitHub Token:', GITHUB_TOKEN);
+
+                // Now you can use the token as needed (e.g., make API requests)
+            } catch (error) {
+                console.error('Error loading config.json:', error);
+            }
+        }
 </head>
 <body>
     <h1>Senior Assassin - Join</h1>
