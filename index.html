@@ -33,7 +33,7 @@
                 const response = await fetch(GITHUB_API_URL + filePath, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `Bearer ${GITHUB_TOKEN_NO_PREFIX}`,
+                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
