@@ -5,7 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Senior Assassin - Join</title>
 
-    async function loadToken() {
+    
+</head>
+<body>
+    <h1>Senior Assassin - Join</h1>
+    <div>
+        <label for="game-code">Enter Game Code:</label>
+        <input type="text" id="game-code">
+        <button onclick="joinGame()">Join Game</button>
+    </div>
+
+    <script>
+        const GITHUB_API_URL = 'https://api.github.com/repos/monkeyluigi/senior_assassin/contents/';
+        async function loadToken() {
             try {
                 // Fetch the config.json file
                 const response = await fetch('config.json');
@@ -25,18 +37,6 @@
                 console.error('Error loading config.json:', error);
             }
         }
-</head>
-<body>
-    <h1>Senior Assassin - Join</h1>
-    <div>
-        <label for="game-code">Enter Game Code:</label>
-        <input type="text" id="game-code">
-        <button onclick="joinGame()">Join Game</button>
-    </div>
-
-    <script>
-        const GITHUB_API_URL = 'https://api.github.com/repos/monkeyluigi/senior_assassin/contents/';
-        const GITHUB_TOKEN = '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';
 
         async function joinGame() {
             const gameCode = document.getElementById('game-code').value.trim();
