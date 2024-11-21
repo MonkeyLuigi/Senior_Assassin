@@ -4,7 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Senior Assassin - Host</title>
-    async function loadToken() {
+    
+</head>
+<body>
+    <h1>Senior Assassin - Host</h1>
+    <div>
+        <button onclick="startNewGame()">Start New Game</button>
+        <p id="game-code-display">Game Code: </p>
+    </div>
+
+    <script>
+        const GITHUB_API_URL = 'https://api.github.com/repos/monkeyluigi/senior_assassin/contents/';
+        async function loadToken() {
             try {
                 // Fetch the config.json file
                 const response = await fetch('config.json');
@@ -24,16 +35,6 @@
                 console.error('Error loading config.json:', error);
             }
         }
-</head>
-<body>
-    <h1>Senior Assassin - Host</h1>
-    <div>
-        <button onclick="startNewGame()">Start New Game</button>
-        <p id="game-code-display">Game Code: </p>
-    </div>
-
-    <script>
-        const GITHUB_API_URL = 'https://api.github.com/repos/monkeyluigi/senior_assassin/contents/';
 
         async function startNewGame() {
             const gameCode = Math.floor(Math.random() * 1000000).toString();
