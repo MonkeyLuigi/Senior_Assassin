@@ -4,8 +4,8 @@ import { Octokit } from 'https://cdn.skypack.dev/@octokit/core';
 
 // Example script
 const GITHUB_API_URL = 'https://api.github.com/repos/monkeyluigi/senior_assassin/contents/';
-const GITHUB_TOKEN_NO_PREFIX = "11BNBPGZA0Evss9oJ0Kq26_OwZFBh8l8vBy5VOwckmG5olL5GoA7G9KjIFIQYiHI3RKMOSMNT3Wy2Py21k";
-const GITHUB_TOKEN = 'github_pat_' + GITHUB_TOKEN_NO_PREFIX
+const GITHUB_TOKEN_NO_PREFIX = "1DyloV1tSDJW813AgexIkMVK2YMqqX155bPA";
+const GITHUB_TOKEN = 'ghp_' + GITHUB_TOKEN_NO_PREFIX
 const GITHUB_API_OWNER = 'monkeyluigi'; // Replace with your GitHub username
 const GITHUB_API_REPO = 'senior_assassin'; // Replace with your repository name
 
@@ -31,7 +31,7 @@ async function startNewGame() {
             message: `Create a new game with code ${gameCode}`,
             committer: {
                 name: 'Game Host',
-                email: 'host@example.com'
+                email: 'kaden.c.clayton@gmail.com'
             },
             content: btoa(JSON.stringify(initialData)),
             headers: {
