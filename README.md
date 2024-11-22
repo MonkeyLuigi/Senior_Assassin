@@ -1,0 +1,1 @@
+Senior Assassin Game Manager is a web-based tool for hosting and managing games of Senior Assassin. Players can join, update their status, and track game progress using a secure interface integrated with GitHub for persistent data storage.
