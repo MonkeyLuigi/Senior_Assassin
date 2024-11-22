@@ -44,7 +44,12 @@
     <h1>Join a Game</h1>
     <input type="text" id="game-code" placeholder="Enter Game Code" />
     <br />
-    <button class="button" onclick="joinGame()">Join Game</button>
+    <input type="text" id="join-game-code" placeholder="Enter Game Code" />
+<input type="text" id="player-name" placeholder="Enter Your Name" />
+<input type="file" id="player-picture" accept="image/*" />
+<button onclick="joinGame()">Join Game</button>
+<div id="join-status" style="margin-top: 10px; color: red;"></div>
+
     <p id="join-message"></p>
 
     <!-- Include joinScript.js -->
