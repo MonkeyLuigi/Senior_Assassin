@@ -1,7 +1,7 @@
 // Example script
 const GITHUB_API_URL = 'https://api.github.com/repos/monkeyluigi/senior_assassin/contents/';
 const GITHUB_TOKEN_NO_PREFIX = process.env.GITHUB_TOKEN || '';
-const GITHUB_TOKEN = 'ghp_' + GITHUB_TOKEN_NO_PREFIX
+const GITHUB_TOKEN = 'github_pat_' + GITHUB_TOKEN_NO_PREFIX
 
 // Test that the token is being accessed
 if (!GITHUB_TOKEN) {
