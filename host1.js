@@ -51,7 +51,6 @@ async function startNewGame() {
     }
 }
 
-
 // Function to resume a game by game code
 async function resumeGame() {
     const gameCode = document.getElementById('resume-game-code').value.trim();
@@ -79,13 +78,13 @@ async function resumeGame() {
 
             // Update the UI with the retrieved game data
             players = gameData.players || [];
-            renderPlayerList();
+            renderPlayerList();  // Call the function to render the player list
 
             document.getElementById('game-code-display').textContent = `Game Code: ${gameData.gameCode}`;
             document.getElementById('resume-status').textContent = "Game resumed successfully!";
             document.getElementById('resume-status').style.color = "green";
         } else {
-            document.getElementById('resume-status').textContent = "Failed to fetch game data.";
+            document.getElementById('resume-status').textContent = "Failed to fetch game data. Game code may be incorrect.";
         }
     } catch (error) {
         console.error('Error fetching game data:', error);
@@ -93,6 +92,22 @@ async function resumeGame() {
     }
 }
 
+// Function to render the list of players
+function renderPlayerList() {
+    const playerListContainer = document.getElementById('player-list');
+    playerListContainer.innerHTML = ''; // Clear existing list
 
-// Make `startNewGame` accessible in the global scope for HTML onclick usage
+    if (players.length > 0) {
+        players.forEach(player => {
+            const playerItem = document.createElement('li');
+            playerItem.textContent = player;  // Assuming player is just a name or username
+            playerListContainer.appendChild(playerItem);
+        });
+    } else {
+        playerListContainer.textContent = "No players yet.";
+    }
+}
+
+// Make `startNewGame` and `resumeGame` accessible in the global scope for HTML onclick usage
 window.startNewGame = startNewGame;
+window.resumeGame = resumeGame;
