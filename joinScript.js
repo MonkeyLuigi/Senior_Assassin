@@ -35,8 +35,7 @@ async function joinGame() {
     }
 }
 
-// Function to render the list of players
-function renderPlayerList() {
+async function gatherPlayerList(){
     try {
         // Fetch the game file from GitHub
         const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
@@ -66,6 +65,10 @@ function renderPlayerList() {
         console.error('Error fetching game data:', error);
         document.getElementById('resume-status').textContent = "An error occurred. Make sure the game code is correct.";
     }
+}
+// Function to render the list of players
+function renderPlayerList() {
+    
     const playerListContainer = document.getElementById('player-list');
 
     // Check if the player-list element exists before proceeding
