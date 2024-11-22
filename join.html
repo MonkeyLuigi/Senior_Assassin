@@ -4,73 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Senior Assassin - Join</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+        }
 
-    
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 1.2rem;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            text-transform: uppercase;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Senior Assassin - Join</h1>
-    <div>
-        <label for="game-code">Enter Game Code:</label>
-        <input type="text" id="game-code">
-        <button onclick="joinGame()">Join Game</button>
-    </div>
+    <h1>Join a Game</h1>
+    <input type="text" id="game-code" placeholder="Enter Game Code" />
+    <br />
+    <button class="button" onclick="joinGame()">Join Game</button>
+    <p id="join-message"></p>
 
-    <script>
-        const GITHUB_API_URL = 'https://api.github.com/repos/MonkeyLuigi/Senior_Assassin/contents/';
-
-                // Extract the token (or use a default if not found)
-                const GITHUB_TOKEN_NO_PREFIX = 'JoGJywcsomizkIlUiEnHCirbjcXPUd0DpKlg';
-
-                // Add your desired prefix if needed
-                const GITHUB_TOKEN = 'hgp_' + GITHUB_TOKEN_NO_PREFIX;
-
-        async function joinGame() {
-            const gameCode = document.getElementById('game-code').value.trim();
-            const filePath = `${gameCode}.json`;
-
-            try {
-                // Fetch game data from GitHub
-                const response = await fetch(GITHUB_API_URL + filePath, {
-                    headers: {
-                        'Authorization': `Bearer ${GITHUB_TOKEN}`
-                    }
-                });
-
-                if (response.ok) {
-                    const fileData = await response.json();
-                    const content = JSON.parse(atob(fileData.content)); // Decode the base64 content
-
-                    // Add the joiner to the game
-                    const playerName = prompt("Enter your name to join:");
-                    if (playerName && !content.players.includes(playerName)) {
-                        content.players.push(playerName);
-
-                        // Push updated data back to GitHub
-                        await fetch(GITHUB_API_URL + filePath, {
-                            method: 'PUT',
-                            headers: {
-                                'Authorization': `Bearer ${GITHUB_TOKEN}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                message: `Add player: ${playerName}`,
-                                content: btoa(JSON.stringify(content)),
-                                sha: fileData.sha // Required to update existing files
-                            })
-                        });
-
-                        alert("Successfully joined the game!");
-                    } else {
-                        alert("Invalid name or already in the game.");
-                    }
-                } else {
-                    alert("Game not found. Please check the code.");
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert("An error occurred while joining the game.");
-            }
-        }
-    </script>
+    <!-- Include joinScript.js -->
+    <script src="joinScript.js"></script>
 </body>
 </html>
