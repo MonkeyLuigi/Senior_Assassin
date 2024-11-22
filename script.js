@@ -1,47 +1,52 @@
+// Import Octokit (for environments like bundlers or modern browsers)
+import { Octokit } from 'https://cdn.skypack.dev/@octokit/core';
+
 // Example script
 const GITHUB_API_URL = 'https://api.github.com/repos/monkeyluigi/senior_assassin/contents/';
 const GITHUB_TOKEN_NO_PREFIX = process.env.GITHUB_TOKEN || '';
 const GITHUB_TOKEN = 'github_pat_' + GITHUB_TOKEN_NO_PREFIX
 
-// Test that the token is being accessed
-if (!GITHUB_TOKEN) {
-    console.error('GitHub Token not found. Make sure you set the environment variable!');
-    process.exit(1);
-}
+const octokit = new Octokit({
+    auth: GITHUB_TOKEN
+});
 
-console.log('GitHub Token loaded successfully!');
-
-// Proceed with your API call
+// Function to start a new game
 async function startNewGame() {
     const gameCode = Math.floor(Math.random() * 1000000).toString();
-    const filePath = `${gameCode}.json`;
+    const filePath = `${gameCode}.json`; // Each game gets its own file
     const initialData = {
         gameCode: gameCode,
         players: []
     };
 
     try {
-        const response = await fetch(GITHUB_API_URL + filePath, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${GITHUB_TOKEN}`,
-                'Content-Type': 'application/json'
+        // Attempt to create a new game file on GitHub
+        const response = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+            owner: GITHUB_API_OWNER,
+            repo: GITHUB_API_REPO,
+            path: filePath,
+            message: `Create a new game with code ${gameCode}`,
+            committer: {
+                name: 'Game Host',
+                email: 'host@example.com'
             },
-            body: JSON.stringify({
-                message: 'Create new game',
-                content: btoa(JSON.stringify(initialData))
-            })
+            content: btoa(JSON.stringify(initialData)),
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
         });
 
-        if (response.ok) {
-            alert(`Game started! Game Code: ${gameCode}`);
+        if (response.status === 201) { // Status 201 indicates successful file creation
+            document.getElementById('game-code-display').textContent = `Game Code: ${gameCode}`;
+            alert("Game started! Share this code with joiners.");
         } else {
-            const error = await response.json();
-            console.error('GitHub API Error:', error);
-            alert('Failed to create the game. Check console for details.');
+            alert("Failed to create game. Please check your GitHub settings.");
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while creating the game.');
+        alert("An error occurred while creating the game.");
     }
 }
+
+// Make `startNewGame` accessible in the global scope for HTML onclick usage
+window.startNewGame = startNewGame;
