@@ -16,6 +16,7 @@ const octokit = new Octokit({
 // Declare global variable for players
 let players = [];
 
+
 // Function to start a new game
 async function startNewGame() {
     const gameCode = Math.floor(Math.random() * 1000000).toString();
