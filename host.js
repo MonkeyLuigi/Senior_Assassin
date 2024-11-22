@@ -125,5 +125,47 @@ async function updateGameData() {
     }
 }
 
+// Function to resume a game by game code
+async function resumeGame() {
+    const gameCode = document.getElementById('resume-game-code').value.trim();
+    const filePath = `${gameCode}.json`;
+
+    if (!gameCode) {
+        document.getElementById('resume-status').textContent = "Please enter a valid game code.";
+        return;
+    }
+
+    try {
+        // Fetch the game file from GitHub
+        const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+            owner: GITHUB_API_OWNER,
+            repo: GITHUB_API_REPO,
+            path: filePath,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+
+        if (response.status === 200) {
+            const content = atob(response.data.content);
+            const gameData = JSON.parse(content);
+
+            // Update the UI with the retrieved game data
+            players = gameData.players || [];
+            renderPlayerList();
+
+            document.getElementById('game-code-display').textContent = `Game Code: ${gameData.gameCode}`;
+            document.getElementById('resume-status').textContent = "Game resumed successfully!";
+            document.getElementById('resume-status').style.color = "green";
+        } else {
+            document.getElementById('resume-status').textContent = "Failed to fetch game data.";
+        }
+    } catch (error) {
+        console.error('Error fetching game data:', error);
+        document.getElementById('resume-status').textContent = "An error occurred. Make sure the game code is correct.";
+    }
+}
+
+
 // Make `startNewGame` accessible in the global scope for HTML onclick usage
 window.startNewGame = startNewGame;
