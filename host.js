@@ -98,18 +98,25 @@ async function resumeGame() {
 // Function to render the list of players
 function renderPlayerList() {
     const playerListContainer = document.getElementById('player-list');
-    playerListContainer.innerHTML = ''; // Clear existing list
 
-    if (players.length > 0) {
-        players.forEach(player => {
-            const playerItem = document.createElement('li');
-            playerItem.textContent = player;  // Assuming player is just a name or username
-            playerListContainer.appendChild(playerItem);
-        });
+    // Check if the player-list element exists before proceeding
+    if (playerListContainer) {
+        playerListContainer.innerHTML = ''; // Clear existing list
+
+        if (players.length > 0) {
+            players.forEach(player => {
+                const playerItem = document.createElement('li');
+                playerItem.textContent = player;  // Assuming player is just a name or username
+                playerListContainer.appendChild(playerItem);
+            });
+        } else {
+            playerListContainer.textContent = "No players yet.";
+        }
     } else {
-        playerListContainer.textContent = "No players yet.";
+        console.error('Error: player-list element not found.');
     }
 }
+
 
 // Make `startNewGame` and `resumeGame` accessible in the global scope for HTML onclick usage
 window.startNewGame = startNewGame;
