@@ -35,5 +35,56 @@ async function joinGame() {
     }
 }
 
+// Function to render the list of players
+function renderPlayerList() {
+    try {
+        // Fetch the game file from GitHub
+        const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+            owner: "monkeyluigi",
+            repo: 'senior_assassin',
+            path: gamefilePath,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+
+        if (response.status === 200) {
+            const content = atob(response.data.content);
+            const gameData = JSON.parse(content);
+
+            // Update the UI with the retrieved game data
+            players = gameData.players || [];
+            renderPlayerList();  // Call the function to render the player list
+
+            document.getElementById('game-code-display').textContent = `Game Code: ${gameData.gameCode}`;
+            document.getElementById('resume-status').textContent = "Game resumed successfully!";
+            document.getElementById('resume-status').style.color = "green";
+        } else {
+            document.getElementById('resume-status').textContent = "Failed to fetch game data. Game code may be incorrect.";
+        }
+    } catch (error) {
+        console.error('Error fetching game data:', error);
+        document.getElementById('resume-status').textContent = "An error occurred. Make sure the game code is correct.";
+    }
+    const playerListContainer = document.getElementById('player-list');
+
+    // Check if the player-list element exists before proceeding
+    if (playerListContainer) {
+        playerListContainer.innerHTML = ''; // Clear existing list
+
+        if (players.length > 0) {
+            players.forEach(player => {
+                const playerItem = document.createElement('li');
+                playerItem.textContent = player;  // Assuming player is just a name or username
+                playerListContainer.appendChild(playerItem);
+            });
+        } else {
+            playerListContainer.textContent = "No players yet.";
+        }
+    } else {
+        console.error('Error: player-list element not found.');
+    }
+}
+
 // Expose the function globally so the HTML can use it
 window.joinGame = joinGame;
