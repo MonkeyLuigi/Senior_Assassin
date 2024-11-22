@@ -11,8 +11,15 @@
         <button onclick="startNewGame()">Start New Game</button>
         <p id="game-code-display">Game Code: </p>
     </div>
+    <div>
+    <h2>Resume Game</h2>
+    <input type="text" id="resume-game-code" placeholder="Enter Game Code" />
+    <button onclick="resumeGame()">Resume</button>
+    </div>
+    <div id="resume-status" style="margin-top: 10px; color: red;"></div>
+
 
     <!-- External Script -->
-    <script type="module" src="host1.js"></script>
+    <script type="module" src="host.js"></script>
 </body>
 </html>
