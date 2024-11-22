@@ -12,12 +12,15 @@
         <p id="game-code-display">Game Code: </p>
     </div>
     <div>
-    <h2>Resume Game</h2>
-    <input type="text" id="resume-game-code" placeholder="Enter Game Code" />
-    <button onclick="resumeGame()">Resume</button>
+        <h2>Resume Game</h2>
+        <input type="text" id="resume-game-code" placeholder="Enter Game Code" />
+        <button onclick="resumeGame()">Resume</button>
+        <div id="resume-status" style="margin-top: 10px; color: red;"></div>
     </div>
-    <div id="resume-status" style="margin-top: 10px; color: red;"></div>
 
+    <h3>Players:</h3>
+    <!-- Make sure this element exists for the list of players -->
+    <ul id="player-list"></ul>
 
     <!-- External Script -->
     <script type="module" src="host1.js"></script>
