@@ -24,8 +24,12 @@ async function joinGame() {
         statusElement.textContent = "Please enter both a valid game code and your name.";
         return;
     }
-
-    let profilePicture = "default-avatar-url"; // Default if no file is uploaded
+    
+    if (!profilePictureInput.files || profilePictureInput.files.length === 0) {
+        statusElement.textContent = "Please upload a profile picture to join.";
+        statusElement.style.color = "red";
+        return;
+    }
 
     // Handle uploaded profile picture
     if (profilePictureInput.files.length > 0) {
@@ -41,7 +45,7 @@ async function joinGame() {
     try {
         const filePath = `${gameCode}.json`;
 
-        // Fetch the current game data
+        // Fetch the current game data to get its sha
         const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
             owner: GITHUB_API_OWNER,
             repo: GITHUB_API_REPO,
@@ -56,8 +60,10 @@ async function joinGame() {
             const gameData = JSON.parse(content);
 
             // Check if the player is already in the game
-            if (gameData.players.some(player => player.name === playerName)) {
-                statusElement.textContent = "You are already in the game!";
+            const nameExists = gameData.players.some(player => player.name.toLowerCase() === playerName.toLowerCase());
+            if (nameExists) {
+                statusElement.textContent = "This name is already in use. Please choose a different name.";
+                statusElement.style.color = "red";
                 return;
             }
 
@@ -70,6 +76,7 @@ async function joinGame() {
             gameData.players.push(newPlayer);
 
             // Upload updated game data to GitHub
+            const sha = response.data.sha; // Get the sha of the existing file
             const updateResponse = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
                 owner: GITHUB_API_OWNER,
                 repo: GITHUB_API_REPO,
@@ -80,6 +87,7 @@ async function joinGame() {
                     email: 'your-email@example.com'
                 },
                 content: btoa(JSON.stringify(gameData)),
+                sha: sha, // Include the sha for updates
                 headers: {
                     'X-GitHub-Api-Version': '2022-11-28'
                 }
@@ -102,6 +110,7 @@ async function joinGame() {
         statusElement.style.color = "red";
     }
 }
+
 
 // Expose the function globally so the HTML can use it
 window.joinGame = joinGame;
