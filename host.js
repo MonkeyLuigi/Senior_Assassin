@@ -184,7 +184,7 @@ function renderPlayerList(players) {
         playerStatus.textContent = `Status: ${player.status}`;
 
         const contactInfo = document.createElement('p');
-        playerStatus.textContent = player.contactInfo;
+        playerContact.textContent = player.contactInfo;
 
         const playerImage = document.createElement('img');
         playerImage.src = player.profilePicture; // Base64 or URL
@@ -200,6 +200,7 @@ function renderPlayerList(players) {
         playerDiv.appendChild(playerImage);
         playerDiv.appendChild(playerName);
         playerDiv.appendChild(playerStatus);
+        playerDiv.appendChild(contactInfo);
         playerDiv.appendChild(removeButton);
 
         // Append playerDiv to the container
