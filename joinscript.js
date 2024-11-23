@@ -35,7 +35,7 @@ async function joinGame() {
     if (profilePictureInput.files.length > 0) {
         const file = profilePictureInput.files[0];
         const reader = new FileReader();
-        profilePicture = await new Promise((resolve, reject) => {
+        const profilePicture = await new Promise((resolve, reject) => {
             reader.onload = (event) => resolve(event.target.result);
             reader.onerror = (err) => reject(err);
             reader.readAsDataURL(file); // Convert file to Base64 URL
