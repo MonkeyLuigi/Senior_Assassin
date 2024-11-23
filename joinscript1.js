@@ -17,11 +17,25 @@ const octokit = new Octokit({
 async function joinGame() {
     const gameCode = document.getElementById('join-game-code').value.trim();
     const playerName = document.getElementById('player-name').value.trim();
-    const profilePicture = document.getElementById('profile-picture').value.trim() || "default-avatar-url"; // Default if not provided
+    const profilePictureInput = document.getElementById('player-picture');
+    const statusElement = document.getElementById('join-status'); // Corrected ID
 
     if (!gameCode || !playerName) {
-        document.getElementById('status').textContent = "Please enter both a valid game code and your name.";
+        statusElement.textContent = "Please enter both a valid game code and your name.";
         return;
+    }
+
+    let profilePicture = "default-avatar-url"; // Default if no file is uploaded
+
+    // Handle uploaded profile picture
+    if (profilePictureInput.files.length > 0) {
+        const file = profilePictureInput.files[0];
+        const reader = new FileReader();
+        profilePicture = await new Promise((resolve, reject) => {
+            reader.onload = (event) => resolve(event.target.result);
+            reader.onerror = (err) => reject(err);
+            reader.readAsDataURL(file); // Convert file to Base64 URL
+        });
     }
 
     try {
@@ -43,7 +57,7 @@ async function joinGame() {
 
             // Check if the player is already in the game
             if (gameData.players.some(player => player.name === playerName)) {
-                document.getElementById('status').textContent = "You are already in the game!";
+                statusElement.textContent = "You are already in the game!";
                 return;
             }
 
@@ -71,20 +85,23 @@ async function joinGame() {
                 }
             });
 
-            if (updateResponse.status === 200) {
-                document.getElementById('status').textContent = `${playerName} has joined the game!`;
+            if (updateResponse.status === 200 || updateResponse.status === 201) {
+                statusElement.textContent = `${playerName} has joined the game!`;
+                statusElement.style.color = "green";
             } else {
-                document.getElementById('status').textContent = "Failed to join the game. Try again.";
+                statusElement.textContent = "Failed to join the game. Try again.";
+                statusElement.style.color = "red";
             }
         } else {
-            document.getElementById('status').textContent = "Game not found. Check the game code.";
+            statusElement.textContent = "Game not found. Check the game code.";
+            statusElement.style.color = "red";
         }
     } catch (error) {
         console.error('Error:', error);
-        document.getElementById('status').textContent = "An error occurred while joining the game.";
+        statusElement.textContent = "An error occurred while joining the game.";
+        statusElement.style.color = "red";
     }
 }
-
 
 // Expose the function globally so the HTML can use it
 window.joinGame = joinGame;
