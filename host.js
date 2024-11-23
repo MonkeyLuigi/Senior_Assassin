@@ -58,15 +58,18 @@ async function startNewGame() {
 // Function to resume a game by game code
 async function resumeGame() {
     const gameCode = document.getElementById('resume-game-code').value.trim();
-    const filePath = `${gameCode}.json`;
+    const statusElement = document.getElementById('resume-status'); // Status messages
 
     if (!gameCode) {
-        document.getElementById('resume-status').textContent = "Please enter a valid game code.";
+        statusElement.textContent = "Please enter a valid game code.";
+        statusElement.style.color = "red";
         return;
     }
 
     try {
-        // Fetch the game file from GitHub
+        const filePath = `${gameCode}.json`;
+
+        // Fetch game data
         const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
             owner: GITHUB_API_OWNER,
             repo: GITHUB_API_REPO,
@@ -80,44 +83,59 @@ async function resumeGame() {
             const content = atob(response.data.content);
             const gameData = JSON.parse(content);
 
-            // Update the UI with the retrieved game data
-            players = gameData.players || [];
-            renderPlayerList();  // Call the function to render the player list
-
-            document.getElementById('game-code-display').textContent = `Game Code: ${gameData.gameCode}`;
-            document.getElementById('resume-status').textContent = "Game resumed successfully!";
-            document.getElementById('resume-status').style.color = "green";
+            // Render player list
+            if (gameData.players && gameData.players.length > 0) {
+                renderPlayerList(gameData.players);
+                statusElement.textContent = "Game loaded successfully!";
+                statusElement.style.color = "green";
+            } else {
+                statusElement.textContent = "No players found in the game.";
+                statusElement.style.color = "red";
+            }
         } else {
-            document.getElementById('resume-status').textContent = "Failed to fetch game data. Game code may be incorrect.";
+            statusElement.textContent = "Game not found. Check the game code.";
+            statusElement.style.color = "red";
         }
     } catch (error) {
-        console.error('Error fetching game data:', error);
-        document.getElementById('resume-status').textContent = "An error occurred. Make sure the game code is correct.";
+        console.error('Error:', error);
+        statusElement.textContent = "An error occurred while loading the game.";
+        statusElement.style.color = "red";
     }
 }
+
 
 // Function to render the list of players
-function renderPlayerList() {
-    const playerListContainer = document.getElementById('player-list');
+function renderPlayerList(players) {
+    const playerListContainer = document.getElementById('player-list'); // Ensure this exists in your HTML
 
-    // Check if the player-list element exists before proceeding
-    if (playerListContainer) {
-        playerListContainer.innerHTML = ''; // Clear existing list
+    // Clear existing content
+    playerListContainer.innerHTML = '';
 
-        if (players.length > 0) {
-            players.forEach(player => {
-                const playerItem = document.createElement('li');
-                playerItem.textContent = player;  // Assuming player is just a name or username
-                playerListContainer.appendChild(playerItem);
-            });
-        } else {
-            playerListContainer.textContent = "No players yet.";
-        }
-    } else {
-        console.error('Error: player-list element not found.');
-    }
+    // Loop through players and create HTML for each
+    players.forEach(player => {
+        const playerDiv = document.createElement('div');
+        playerDiv.className = 'player';
+
+        const playerName = document.createElement('h3');
+        playerName.textContent = `Name: ${player.name}`;
+
+        const playerStatus = document.createElement('p');
+        playerStatus.textContent = `Status: ${player.status}`;
+
+        const playerImage = document.createElement('img');
+        playerImage.src = player.profilePicture; // Base64 or URL
+        playerImage.alt = `${player.name}'s profile picture`;
+        playerImage.style.width = '100px'; // Adjust size as needed
+
+        // Append everything to the playerDiv
+        playerDiv.appendChild(playerImage);
+        playerDiv.appendChild(playerName);
+        playerDiv.appendChild(playerStatus);
+
+        // Append playerDiv to the container
+        playerListContainer.appendChild(playerDiv);
+    });
 }
-
 
 // Make `startNewGame` and `resumeGame` accessible in the global scope for HTML onclick usage
 window.startNewGame = startNewGame;
