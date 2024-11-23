@@ -18,10 +18,11 @@ async function joinGame() {
     const gameCode = document.getElementById('join-game-code').value.trim();
     const playerName = document.getElementById('player-name').value.trim();
     const profilePictureInput = document.getElementById('player-picture');
+    const ContactInfo = document.getElementById('contact-info');
     const statusElement = document.getElementById('join-status'); // Corrected ID
 
-    if (!gameCode || !playerName) {
-        statusElement.textContent = "Please enter both a valid game code and your name.";
+    if (!gameCode || !playerName || !ContactInfo) {
+        statusElement.textContent = "Please enter both a valid game code, your name and/or contact info.";
         return;
     }
     
@@ -70,6 +71,7 @@ async function joinGame() {
                 name: playerName,
                 status: "alive",
                 profilePicture: profilePicture
+                contactInfo: ContactInfo
             };
             gameData.players.push(newPlayer);
 
