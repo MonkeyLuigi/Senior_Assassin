@@ -15,7 +15,7 @@ const octokit = new Octokit({
 
 // Function for players to join a game
 async function joinGame() {
-    const gameCode = document.getElementById('game-code').value.trim();
+    const gameCode = document.getElementById('join-game-code').value.trim();
     const playerName = document.getElementById('player-name').value.trim();
     const profilePicture = document.getElementById('profile-picture').value.trim() || "default-avatar-url"; // Default if not provided
 
