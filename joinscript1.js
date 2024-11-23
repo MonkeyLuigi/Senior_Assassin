@@ -31,21 +31,19 @@ async function joinGame() {
         return;
     }
 
-    // Handle uploaded profile picture
-    if (profilePictureInput.files.length > 0) {
+    try {
+        // Convert the uploaded file to a Base64 string
         const file = profilePictureInput.files[0];
-        const reader = new FileReader();
         const profilePicture = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
             reader.onload = (event) => resolve(event.target.result);
             reader.onerror = (err) => reject(err);
             reader.readAsDataURL(file); // Convert file to Base64 URL
         });
-    }
 
-    try {
         const filePath = `${gameCode}.json`;
 
-        // Fetch the current game data to get its sha
+        // Fetch the current game data
         const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
             owner: GITHUB_API_OWNER,
             repo: GITHUB_API_REPO,
