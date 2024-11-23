@@ -103,6 +103,67 @@ async function resumeGame() {
     }
 }
 
+async function removePlayer(index) {
+    const gameCode = document.getElementById('resume-game-code').value.trim();
+
+    if (!gameCode) {
+        alert("No game code found. Please resume a game first.");
+        return;
+    }
+
+    const filePath = `${gameCode}.json`;
+
+    try {
+        // Fetch the current game data
+        const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+            owner: GITHUB_API_OWNER,
+            repo: GITHUB_API_REPO,
+            path: filePath,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+
+        if (response.status === 200) {
+            const content = atob(response.data.content);
+            const gameData = JSON.parse(content);
+
+            // Remove the player at the specified index
+            gameData.players.splice(index, 1);
+
+            // Update the game data on GitHub
+            const updateResponse = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+                owner: GITHUB_API_OWNER,
+                repo: GITHUB_API_REPO,
+                path: filePath,
+                message: `Remove player at index ${index}`,
+                committer: {
+                    name: 'Game Host',
+                    email: 'your-email@example.com'
+                },
+                content: btoa(JSON.stringify(gameData)),
+                sha: response.data.sha, // Required for updates
+                headers: {
+                    'X-GitHub-Api-Version': '2022-11-28'
+                }
+            });
+
+            if (updateResponse.status === 200) {
+                alert("Player removed successfully!");
+                renderPlayerList(gameData.players); // Refresh the list
+            } else {
+                alert("Failed to update the game data. Try again.");
+            }
+        } else {
+            alert("Failed to fetch the game data. Check the game code.");
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert("An error occurred while removing the player.");
+    }
+}
+
+
 
 // Function to render the list of players
 function renderPlayerList(players) {
@@ -112,7 +173,7 @@ function renderPlayerList(players) {
     playerListContainer.innerHTML = '';
 
     // Loop through players and create HTML for each
-    players.forEach(player => {
+    players.forEach((player,index) => {
         const playerDiv = document.createElement('div');
         playerDiv.className = 'player';
 
@@ -127,10 +188,16 @@ function renderPlayerList(players) {
         playerImage.alt = `${player.name}'s profile picture`;
         playerImage.style.width = '100px'; // Adjust size as needed
 
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.className = 'remove-button';
+        removeButton.onclick = () => removePlayer(index); // Pass the player's index
+
         // Append everything to the playerDiv
         playerDiv.appendChild(playerImage);
         playerDiv.appendChild(playerName);
         playerDiv.appendChild(playerStatus);
+        playerDiv.appendChild(removeButton);
 
         // Append playerDiv to the container
         playerListContainer.appendChild(playerDiv);
