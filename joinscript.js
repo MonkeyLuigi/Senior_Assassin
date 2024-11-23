@@ -70,7 +70,7 @@ async function joinGame() {
             const newPlayer = {
                 name: playerName,
                 status: "alive",
-                profilePicture: profilePicture
+                profilePicture: profilePicture,
                 contactInfo: ContactInfo
             };
             gameData.players.push(newPlayer);
