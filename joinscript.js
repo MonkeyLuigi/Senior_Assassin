@@ -17,6 +17,7 @@ const octokit = new Octokit({
 async function joinGame() {
     const gameCode = document.getElementById('join-game-code').value.trim();
     const playerName = document.getElementById('player-name').value.trim();
+    const playerName = document.getElementById('contact-info').value.trim();
     const profilePictureInput = document.getElementById('profile-picture');
     const statusElement = document.getElementById('join-status'); // Corrected ID
 
