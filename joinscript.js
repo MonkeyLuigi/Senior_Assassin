@@ -65,7 +65,7 @@ async function joinGame() {
 }
 
 async function uploadImageToGitHub(imageFile, fileName) {
-    const filePath = `images/${fileName}`; // Store in the 'images/' folder
+    const filePath = `images/${fileName}`; // Store image in the 'images/' folder
     const base64Content = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result.split(",")[1]); // Extract base64 content
@@ -113,6 +113,8 @@ async function uploadImageToGitHub(imageFile, fileName) {
         console.error("Error uploading image:", error);
         return null;
     }
+}
+
 }
 
 
