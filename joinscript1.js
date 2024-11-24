@@ -115,7 +115,6 @@ async function uploadImageToGitHub(imageFile, fileName) {
     }
 }
 
-}
 
 
 window.joinGame = joinGame;
