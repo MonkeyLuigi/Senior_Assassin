@@ -64,28 +64,55 @@ async function joinGame() {
 }
 
 async function uploadImageToGitHub(imageFile, fileName) {
-    const filePath = `images/${fileName}`;
+    const filePath = `images/${fileName}`; // Store in the 'images/' folder
     const base64Content = await new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(",")[1]);
+        reader.onload = () => resolve(reader.result.split(",")[1]); // Extract base64 content
         reader.onerror = reject;
         reader.readAsDataURL(imageFile);
     });
 
-    const response = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-        owner: GITHUB_API_OWNER,
-        repo: GITHUB_API_REPO,
-        path: filePath,
-        message: `Upload profile image for ${fileName}`,
-        committer: { name: 'Game Host', email: 'your-email@example.com' },
-        content: base64Content
-    });
+    try {
+        // Check if the file already exists by making a GET request to fetch the file
+        const getFileResponse = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+            owner: GITHUB_API_OWNER,
+            repo: GITHUB_API_REPO,
+            path: filePath,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
 
-    if (response.status === 201) {
-        return `https://raw.githubusercontent.com/${GITHUB_API_OWNER}/${GITHUB_API_REPO}/main/${filePath}`;
-    } else {
+        let sha = '';
+        if (getFileResponse.status === 200) {
+            // File exists, so we need to get the sha for updating
+            sha = getFileResponse.data.sha;
+        }
+
+        // Upload or update the image file on GitHub
+        const response = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+            owner: GITHUB_API_OWNER,
+            repo: GITHUB_API_REPO,
+            path: filePath,
+            message: `Upload or update image: ${fileName}`,
+            committer: { name: 'Game Host', email: 'your-email@example.com' },
+            content: base64Content,
+            sha: sha || '', // If SHA exists, use it for updates
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+
+        if (response.status === 201 || response.status === 200) {
+            return `https://raw.githubusercontent.com/${GITHUB_API_OWNER}/${GITHUB_API_REPO}/main/${filePath}`;
+        } else {
+            throw new Error("Failed to upload the image.");
+        }
+    } catch (error) {
+        console.error("Error uploading image:", error);
         return null;
     }
 }
+
 
 window.joinGame = joinGame;
