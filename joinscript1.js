@@ -16,6 +16,7 @@ async function joinGame() {
     const playerName = document.getElementById('player-name').value.trim();
     const contactInfo = document.getElementById('contact-info').value.trim();
     const profilePictureInput = document.getElementById('profile-picture');
+    const statusElement = document.getElementById('join-status');
 
     if (!gameCode || !playerName || !profilePictureInput.files.length || !contactInfo) {
         statusElement.textContent = "Please enter game code, name, contact info, and upload a profile picture.";
