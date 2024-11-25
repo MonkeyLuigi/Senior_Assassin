@@ -3,40 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Senior Assassin - Host</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 100px;
-        }
-        input, button {
-            padding: 10px;
-            font-size: 1.2rem;
-            width: 300px;
-            margin-bottom: 20px;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>Senior Assassin</title>
+    <link rel="stylesheet" href="styles1.css">
 </head>
 <body>
     <h1>Senior Assassin - Host</h1>
     <div>
         <button onclick="startNewGame()">Start New Game</button>
         <p id="game-code-display">Game Code: </p>
+         <p id="host-password-display">Password: </p>
     </div>
     <div>
         <h2>Resume Game</h2>
         <input type="text" id="resume-game-code" placeholder="Enter Game Code" />
+        <input type="text" id="host-game-password" placeholder="Enter Game Password" />
         <button onclick="resumeGame()">Resume</button>
         <div id="resume-status" style="margin-top: 10px; color: red;"></div>
         <div id="player-list" style="margin-top: 20px;"></div>
