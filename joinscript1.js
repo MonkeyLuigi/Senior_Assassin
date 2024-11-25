@@ -72,6 +72,7 @@ async function joinGame() {
             // Add the new player to the game data
             const newPlayer = {
                 name: playerName,
+                contact: contactInfo,
                 status: "alive",
                 profilePicture: profilePicture
             };
