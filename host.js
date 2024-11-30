@@ -1,8 +1,11 @@
 // Import Octokit
 import { Octokit } from 'https://cdn.skypack.dev/@octokit/core';
 
-const GITHUB_API_OWNER = 'mathlover24';
-const GITHUB_API_REPO = 'my-game';
+const GITHUB_API_URL = 'https://api.github.com/repos/monkeyluigi/senior_assassin/contents/';
+const GITHUB_TOKEN_SUFFIX = '1DyloV1tSDJW813AgexIkMVK2YMqqX155bPA';
+const GITHUB_TOKEN = "ghp_" + GITHUB_TOKEN_SUFFIX;
+const GITHUB_API_OWNER = 'monkeyluigi'; // Replace with your GitHub username
+const GITHUB_API_REPO = 'senior_assassin'; // Replace with your repository name
 
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
