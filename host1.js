@@ -96,17 +96,48 @@ async function killPlayer(index) {
 }
 
 function renderPlayerList(players) {
-    const playerList = document.getElementById('player-list');
-    playerList.innerHTML = '';
+    const playerListContainer = document.getElementById('player-list');
 
+    // Clear existing content
+    playerListContainer.innerHTML = '';
+
+    // Loop through players and create HTML for each
     players.forEach((player, index) => {
         const playerDiv = document.createElement('div');
-        playerDiv.innerHTML = `
-            <h3>${player.name} (${player.status})</h3>
-            <button onclick="killPlayer(${index})">Kill</button>
-            <button onclick="removePlayer(${index})">Remove</button>
-        `;
-        playerList.appendChild(playerDiv);
+        playerDiv.className = 'player';
+
+        const playerName = document.createElement('h3');
+        playerName.textContent = `Name: ${player.name}`;
+
+        const playerStatus = document.createElement('p');
+        playerStatus.textContent = `Status: ${player.status}`;
+
+        const contactInfo = document.createElement('p');
+        contactInfo.textContent = `Contact: ${player.contact || "N/A"}`;
+
+        const playerImage = document.createElement('img');
+        playerImage.src = player.profilePicture || "placeholder.png"; // Fallback for missing profile picture
+        playerImage.alt = `${player.name}'s profile picture`;
+        playerImage.style.width = '100px';
+
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.onclick = () => removePlayer(index);
+
+        const killButton = document.createElement('button');
+        killButton.textContent = 'Kill';
+        killButton.onclick = () => killPlayer(index);
+
+        // Append everything to the playerDiv
+        playerDiv.appendChild(playerImage);
+        playerDiv.appendChild(playerName);
+        playerDiv.appendChild(playerStatus);
+        playerDiv.appendChild(contactInfo);
+        playerDiv.appendChild(removeButton);
+        playerDiv.appendChild(killButton);
+
+        // Append playerDiv to the container
+        playerListContainer.appendChild(playerDiv);
     });
 }
 
