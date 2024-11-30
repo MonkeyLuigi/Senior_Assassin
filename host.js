@@ -158,6 +158,65 @@ function renderPlayerList(players) {
     });
 }
 
+// Function to remove a player by index
+function removePlayer(index) {
+    if (confirm("Are you sure you want to remove this player?")) {
+        players.splice(index, 1); // Remove the player from the list
+        updateGameFile();        // Update the game file on GitHub
+        renderPlayerList(players); // Re-render the player list
+    }
+}
+
+// Function to mark a player as "killed"
+function killPlayer(index) {
+    if (confirm("Are you sure you want to mark this player as killed?")) {
+        players[index].status = "Killed"; // Update the player's status
+        updateGameFile();                 // Update the game file on GitHub
+        renderPlayerList(players);        // Re-render the player list
+    }
+}
+
+async function updateGameFile() {
+    try {
+        const filePath = `${gameCode}.json`;
+
+        // Fetch the current file's SHA (needed for updates)
+        const fileResponse = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+            owner: GITHUB_API_OWNER,
+            repo: GITHUB_API_REPO,
+            path: filePath,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+
+        const fileSHA = fileResponse.data.sha;
+
+        // Update the file on GitHub
+        await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+            owner: GITHUB_API_OWNER,
+            repo: GITHUB_API_REPO,
+            path: filePath,
+            message: `Update game state for ${gameCode}`,
+            committer: {
+                name: 'Game Host',
+                email: 'kaden.c.clayton@gmail.com'
+            },
+            content: btoa(JSON.stringify({ gameCode, hostPassword, players })), // Updated content
+            sha: fileSHA, // Include the SHA for update
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+
+        console.log("Game file updated successfully!");
+    } catch (error) {
+        console.error("Error updating the game file:", error);
+        alert("Failed to update the game state. Please check your connection or GitHub settings.");
+    }
+}
+
+
 // Expose `startNewGame` and `resumeGame` globally
 window.startNewGame = startNewGame;
 window.resumeGame = resumeGame;
